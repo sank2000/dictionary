@@ -1,30 +1,110 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Home({ navigation }) {
+import { Text } from '../components';
+import Screen from '../components/Screen';
+
+export default function Home() {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-        <Text>Search</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('History')}>
-        <Text>History</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Bookmark')}>
-        <Text>Bookmark</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Notes')}>
-        <Text>Notes</Text>
-      </TouchableOpacity>
-    </View>
+    <Screen style={styles.container}>
+      <View style={styles.container_top}>
+        <Image source={require('../assets/icon.png')} style={styles.logo} />
+        <Text style={styles.logo_text}>Dictionary</Text>
+      </View>
+      <View style={styles.container_main}>
+        <Card
+          title="Search"
+          image={require('../assets/search.png')}
+          navigate="Search"
+        />
+        <Card
+          title="History"
+          image={require('../assets/history.png')}
+          navigate="History"
+        />
+        <Card
+          title="Bookmark"
+          image={require('../assets/bookmark.png')}
+          navigate="Bookmark"
+        />
+        <Card
+          title="Notes"
+          image={require('../assets/notes.png')}
+          navigate="Notes"
+        />
+      </View>
+    </Screen>
+  );
+}
+
+function Card({ title, image, navigate }) {
+  const navigation = useNavigation();
+
+  return (
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => navigation.navigate(navigate)}
+    >
+      <Image
+        resizeMethod="resize"
+        resizeMode="contain"
+        source={image}
+        style={styles.card_img}
+      />
+      <Text style={styles.card_text}>{title}</Text>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  container_top: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: -50,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+  },
+  logo_text: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 4,
+  },
+  container_main: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  card: {
+    width: '40%',
+    margin: '5%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.5,
+    elevation: 2,
+    padding: 20,
+    borderWidth: 0.2,
+    borderColor: '#cccccc',
+  },
+  card_img: {
+    width: 80,
+    height: 80,
+  },
+  card_text: {
+    marginTop: 10,
   },
 });
