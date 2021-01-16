@@ -3,13 +3,18 @@ import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { Text } from '../components';
+import { scale, moderateScale, verticalScale } from '../functions';
 import Screen from '../components/Screen';
 
 export default function Home() {
   return (
     <Screen style={styles.container}>
       <View style={styles.container_top}>
-        <Image source={require('../assets/icon.png')} style={styles.logo} />
+        <Image
+          source={require('../assets/icon.png')}
+          resizeMode="contain"
+          style={styles.logo}
+        />
         <Text style={styles.logo_text}>Dictionary</Text>
       </View>
       <View style={styles.container_main}>
@@ -69,8 +74,8 @@ const styles = StyleSheet.create({
     top: -50,
   },
   logo: {
-    width: 50,
-    height: 50,
+    width: scale(50),
+    height: verticalScale(50),
   },
   logo_text: {
     fontSize: 20,
@@ -96,15 +101,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1.5,
     elevation: 2,
-    padding: 20,
+    padding: moderateScale(20),
     borderWidth: 0.2,
     borderColor: '#cccccc',
   },
   card_img: {
-    width: 80,
-    height: 80,
+    width: scale(80),
+    height: verticalScale(80),
   },
   card_text: {
-    marginTop: 10,
+    marginTop: moderateScale(10),
   },
 });
