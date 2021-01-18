@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Modal, TouchableHighlight } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Modal,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+  FlatList,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { AntDesign } from '@expo/vector-icons';
@@ -63,19 +70,20 @@ export default function Notes() {
 
   return (
     <Screen style={styles.container}>
-      <View>
-        {notes.map((val, ind) => {
+      <FlatList
+        data={notes}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item, index }) => {
           return (
             <CardNote
-              key={ind}
-              ind={ind}
-              title={val.title}
-              description={val.content}
+              ind={index}
+              title={item.title}
+              description={item.content}
               removeItem={removeItem}
             />
           );
-        })}
-      </View>
+        }}
+      />
 
       <TouchableHighlight
         style={styles.addButton}
@@ -127,9 +135,9 @@ const CardNote = ({ ind, title, description, removeItem }) => {
     <View key={ind} style={styles.cardContainer}>
       <View style={styles.cardTop}>
         <Text style={styles.textTitle}>{title}</Text>
-        <TouchableHighlight onPress={() => removeItem(ind)}>
-          <AntDesign name="close" size={24} color="black" />
-        </TouchableHighlight>
+        <TouchableWithoutFeedback onPress={() => removeItem(ind)}>
+          <AntDesign name="close" size={18} color="black" />
+        </TouchableWithoutFeedback>
       </View>
       <Text>{description}</Text>
     </View>
