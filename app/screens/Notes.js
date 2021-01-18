@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Modal } from 'react-native';
+import { StyleSheet, View, Modal, TouchableHighlight } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { AntDesign } from '@expo/vector-icons';
+
 import { TextField, Screen, Button, Text } from '../components';
+import { scale, moderateScale, verticalScale } from '../functions';
 
 import colors from '../config/colors';
 
@@ -17,7 +20,6 @@ export default function Notes() {
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem(NOTES);
-      console.log(value);
       if (value !== null) {
         setNotes(JSON.parse(value));
       } else {
@@ -41,6 +43,16 @@ export default function Notes() {
     setModalVisible(false);
   };
 
+  const handleAdd = () => {
+    updateList({ title, content });
+    setTitle('');
+    setContent('');
+  };
+
+  const removeItem = (ind) => {
+    setNotes((old) => old.filter((val, index) => ind !== index));
+  };
+
   useEffect(() => {
     getData();
   }, []);
@@ -53,15 +65,24 @@ export default function Notes() {
     <Screen style={styles.container}>
       <View>
         {notes.map((val, ind) => {
-          return <Text key={ind}>{JSON.stringify(val)}</Text>;
+          return (
+            <CardNote
+              key={ind}
+              ind={ind}
+              title={val.title}
+              description={val.content}
+              removeItem={removeItem}
+            />
+          );
         })}
       </View>
 
-      <Button
-        title="New"
-        style={{ width: '80%', marginLeft: '10%' }}
+      <TouchableHighlight
+        style={styles.addButton}
         onPress={() => setModalVisible(true)}
-      />
+      >
+        <AntDesign name="plus" size={24} color="white" />
+      </TouchableHighlight>
 
       <Modal
         animationType="slide"
@@ -87,7 +108,7 @@ export default function Notes() {
           <Button
             title="Add"
             style={{ width: '80%', marginLeft: '10%' }}
-            onPress={() => updateList({ title, content })}
+            onPress={() => handleAdd()}
           />
           <Button
             title="Cancel"
@@ -101,15 +122,45 @@ export default function Notes() {
   );
 }
 
+const CardNote = ({ ind, title, description, removeItem }) => {
+  return (
+    <View key={ind} style={styles.cardContainer}>
+      <View style={styles.cardTop}>
+        <Text style={styles.textTitle}>{title}</Text>
+        <TouchableHighlight onPress={() => removeItem(ind)}>
+          <AntDesign name="close" size={24} color="black" />
+        </TouchableHighlight>
+      </View>
+      <Text>{description}</Text>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     marginTop: '50%',
     backgroundColor: colors.white,
   },
+  cardTop: {
+    flexDirection: 'row',
+  },
+  addButton: {
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: scale(50),
+    height: scale(50),
+    padding: moderateScale(5),
+    borderRadius: scale(50),
+    position: 'absolute',
+    top: '85%',
+    left: '80%',
+  },
   textTitle: {
     color: colors.primary,
     fontWeight: '600',
     fontSize: 20,
+    flexGrow: 1,
   },
 });
