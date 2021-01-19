@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1.5,
     elevation: 2,
     padding: moderateScale(20),
-    borderWidth: 0.2,
+    borderWidth: 0.1,
     borderColor: '#cccccc',
   },
   card_img: {

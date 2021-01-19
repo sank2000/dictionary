@@ -136,7 +136,7 @@ const CardNote = ({ ind, title, description, removeItem }) => {
       <View style={styles.cardTop}>
         <Text style={styles.textTitle}>{title}</Text>
         <TouchableWithoutFeedback onPress={() => removeItem(ind)}>
-          <AntDesign name="close" size={18} color="black" />
+          <AntDesign name="close" size={15} color="black" />
         </TouchableWithoutFeedback>
       </View>
       <Text>{description}</Text>
@@ -149,6 +149,21 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: '50%',
     backgroundColor: colors.white,
+  },
+  cardContainer: {
+    backgroundColor: colors.white,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.5,
+    elevation: 2,
+    padding: moderateScale(20),
+    marginBottom: moderateScale(20),
+    borderWidth: 0.1,
+    borderColor: '#cccccc',
   },
   cardTop: {
     flexDirection: 'row',
