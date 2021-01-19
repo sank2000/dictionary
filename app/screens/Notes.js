@@ -7,43 +7,19 @@ import {
   TouchableWithoutFeedback,
   FlatList,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { AntDesign } from '@expo/vector-icons';
 
 import { TextField, Screen, Button, Text } from '../components';
-import { scale, moderateScale, verticalScale } from '../functions';
+import { scale, moderateScale, getData, storeData } from '../functions';
 
 import colors from '../config/colors';
-
-const NOTES = 'notes';
 
 export default function Notes() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [notes, setNotes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem(NOTES);
-      if (value !== null) {
-        setNotes(JSON.parse(value));
-      } else {
-        setNotes([]);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const storeData = async (value) => {
-    try {
-      await AsyncStorage.setItem(NOTES, value);
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   const updateList = (val) => {
     setNotes((old) => [...old, val]);
@@ -61,7 +37,7 @@ export default function Notes() {
   };
 
   useEffect(() => {
-    getData();
+    getData(setNotes);
   }, []);
 
   useEffect(() => {
