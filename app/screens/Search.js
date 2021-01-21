@@ -1,11 +1,29 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+
+import { TextField, Screen, Text } from '../components';
+
+import colors from '../config/colors';
 
 export default function Search() {
+  const [search, setSearch] = useState('');
+
   return (
-    <View style={styles.container}>
-      <Text>Search page</Text>
-    </View>
+    <Screen>
+      <View>
+        <TextField
+          placeholder="Search here"
+          style={styles.textTitle}
+          value={search}
+          onChangeText={(text) => setSearch(text)}
+        />
+        <TouchableOpacity onPress={null}>
+          <AntDesign name="search" size={15} color="black" />
+        </TouchableOpacity>
+      </View>
+      {search !== '' && <Text>{search}</Text>}
+    </Screen>
   );
 }
 
@@ -15,5 +33,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  textTitle: {
+    fontWeight: '600',
+    fontSize: 20,
+    flexGrow: 1,
   },
 });

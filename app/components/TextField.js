@@ -6,7 +6,13 @@ import { moderateScale } from '../functions';
 import defaultStyles from '../config/styles';
 
 const TextField = ({ style, ...otherProps }) => {
-  return <TextInput style={[styles.text, style]} {...otherProps} />;
+  return (
+    <TextInput
+      style={[styles.text, style]}
+      selectionColor={defaultStyles.colors.primary}
+      {...otherProps}
+    />
+  );
 };
 
 const styles = StyleSheet.create({
