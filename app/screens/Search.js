@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
@@ -6,14 +6,32 @@ import LottieView from 'lottie-react-native';
 import { TextField, Screen, Text } from '../components';
 import { moderateScale } from '../functions';
 
+import dictionary from '../api/dictionary';
+
 import colors from '../config/colors';
 
 export default function Search() {
-  const [search, setSearch] = useState('');
+  const [searchText, setSearchText] = useState('');
   const [load, setLoad] = useState(false);
+  const [result, setResult] = useState(null);
 
-  const handleSubmit = () => {
+  useEffect(() => {
+    console.log(result);
+    console.log(result && result.res[0].meanings);
+  }, [result]);
+
+  const handleSubmit = async () => {
     setLoad(true);
+    try {
+      const res = await dictionary.search(searchText);
+      setLoad(false);
+      setResult({
+        found: res.ok,
+        res: res.data,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -22,8 +40,8 @@ export default function Search() {
         <TextField
           placeholder="Search here"
           style={styles.textTitle}
-          value={search}
-          onChangeText={(text) => setSearch(text)}
+          value={searchText}
+          onChangeText={(text) => setSearchText(text)}
         />
         <TouchableOpacity onPress={handleSubmit}>
           <AntDesign
@@ -43,6 +61,23 @@ export default function Search() {
             style={styles.animation}
           />
         </View>
+      )}
+      {result && !result.found && (
+        <Text>{JSON.stringify(result.res.message)}</Text>
+      )}
+      {result && result.found && (
+        <>
+          {result.res[0].meanings.map((val, ind) => {
+            return (
+              <>
+                <Text key={ind}>{val.partOfSpeech}</Text>
+                {val.definitions.map((definition, ind) => {
+                  return <Text key={ind}>{definition.definition}</Text>;
+                })}
+              </>
+            );
+          })}
+        </>
       )}
     </Screen>
   );
