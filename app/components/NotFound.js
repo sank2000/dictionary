@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import LottieView from 'lottie-react-native';
 
 import { moderateScale } from '../functions';
-import { Text } from '../components';
+import Text from './Text';
 
 export default function NotFound({ text = 'No Results Found', style }) {
   return (
