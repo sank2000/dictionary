@@ -12,12 +12,19 @@ export default function SearchCard({ val, ind }) {
       <Text style={styles.title}>{val.partOfSpeech}</Text>
       {val.definitions.map((definition, index) => {
         return (
-          <Text
-            style={styles.subTitle}
-            key={`${index}-${definition.definition}`}
-          >
-            {`${index + 1}. ${definition.definition}`}
-          </Text>
+          <View key={`${index}-${definition.definition}`}>
+            <Text style={styles.subTitle1}>
+              {`${index + 1}. ${definition.definition}`}
+            </Text>
+            {definition.example && (
+              <>
+                <Text style={{ paddingLeft: moderateScale(10) }}>
+                  Example :{' '}
+                </Text>
+                <Text style={styles.subTitle2}>{definition.example}</Text>
+              </>
+            )}
+          </View>
         );
       })}
     </View>
@@ -32,8 +39,14 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: colors.dark,
   },
-  subTitle: {
+  subTitle1: {
     padding: moderateScale(10),
     paddingRight: 0,
+  },
+  subTitle2: {
+    paddingLeft: moderateScale(30),
+    paddingBottom: moderateScale(10),
+    fontSize: 16,
+    color: 'grey',
   },
 });
