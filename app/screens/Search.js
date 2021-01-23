@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, FlatList } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
+import { Audio } from 'expo-av';
 
-import { TextField, Screen, Text } from '../components';
+import {
+  TextField,
+  Screen,
+  Text,
+  SearchCard,
+  AudioCardWithBookmark,
+} from '../components';
 import { moderateScale } from '../functions';
 
 import dictionary from '../api/dictionary';
@@ -14,17 +21,25 @@ export default function Search() {
   const [searchText, setSearchText] = useState('');
   const [load, setLoad] = useState(false);
   const [result, setResult] = useState(null);
+  const [audioResult, setAudioResult] = useState(null);
+  const [sound, setSound] = useState(null);
 
   useEffect(() => {
-    console.log(result);
-    console.log(result && result.res[0].meanings);
-  }, [result]);
+    return sound ? () => sound.unloadAsync() : undefined;
+  }, [sound]);
 
   const handleSubmit = async () => {
     setLoad(true);
+    setResult(null);
+    setAudioResult(null);
+    sound && sound.unloadAsync();
+
     try {
       const res = await dictionary.search(searchText);
       setLoad(false);
+      if (res.ok) {
+        setAudioResult(res?.data[0]?.phonetics[0]);
+      }
       setResult({
         found: res.ok,
         res: res.data,
@@ -32,6 +47,12 @@ export default function Search() {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handlePlay = async () => {
+    const { sound } = await Audio.Sound.createAsync({ uri: audioResult.audio });
+    setSound(sound);
+    await sound.playAsync();
   };
 
   return (
@@ -42,6 +63,7 @@ export default function Search() {
           style={styles.textTitle}
           value={searchText}
           onChangeText={(text) => setSearchText(text)}
+          onSubmitEditing={handleSubmit}
         />
         <TouchableOpacity onPress={handleSubmit}>
           <AntDesign
@@ -62,22 +84,31 @@ export default function Search() {
           />
         </View>
       )}
+      {audioResult && (
+        <AudioCardWithBookmark
+          text={audioResult.text}
+          handlePlay={handlePlay}
+        />
+      )}
       {result && !result.found && (
-        <Text>{JSON.stringify(result.res.message)}</Text>
+        <View style={styles.animation_notfound_container}>
+          <LottieView
+            autoPlay
+            loop={true}
+            source={require('../assets/animations/not-found.json')}
+            style={styles.animation_notfound}
+          />
+          <Text style={styles.notFound}>No Results Found</Text>
+        </View>
       )}
       {result && result.found && (
-        <>
-          {result.res[0].meanings.map((val, ind) => {
-            return (
-              <>
-                <Text key={ind}>{val.partOfSpeech}</Text>
-                {val.definitions.map((definition, ind) => {
-                  return <Text key={ind}>{definition.definition}</Text>;
-                })}
-              </>
-            );
-          })}
-        </>
+        <FlatList
+          data={result.res[0].meanings}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => {
+            return <SearchCard val={item} ind={index} />;
+          }}
+        />
       )}
     </Screen>
   );
@@ -87,6 +118,12 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    borderBottomColor: colors.primary,
+    borderBottomWidth: 2,
+  },
+  notFound: {
+    textAlign: 'center',
+    marginTop: moderateScale(20),
   },
   loadingContainer: {
     justifyContent: 'center',
@@ -94,6 +131,13 @@ const styles = StyleSheet.create({
   },
   animation: {
     width: moderateScale(250),
+  },
+  animation_notfound_container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  animation_notfound: {
+    width: moderateScale(150),
   },
   textTitle: {
     fontWeight: '600',

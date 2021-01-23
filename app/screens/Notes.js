@@ -121,10 +121,15 @@ const CardNote = ({ ind, title, description, removeItem }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    marginTop: 5,
+  },
   modalContainer: {
     flex: 1,
     marginTop: '50%',
     backgroundColor: colors.white,
+    borderTopColor: colors.primary,
+    borderTopWidth: 4,
   },
   cardContainer: {
     backgroundColor: colors.white,
