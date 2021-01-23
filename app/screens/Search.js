@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  FlatList,
+  Keyboard,
+} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { Audio } from 'expo-av';
@@ -7,9 +13,9 @@ import { Audio } from 'expo-av';
 import {
   TextField,
   Screen,
-  Text,
   SearchCard,
   AudioCardWithBookmark,
+  NotFound,
 } from '../components';
 import { moderateScale } from '../functions';
 
@@ -29,6 +35,7 @@ export default function Search() {
   }, [sound]);
 
   const handleSubmit = async () => {
+    Keyboard.dismiss();
     setLoad(true);
     setResult(null);
     setAudioResult(null);
@@ -90,17 +97,7 @@ export default function Search() {
           handlePlay={handlePlay}
         />
       )}
-      {result && !result.found && (
-        <View style={styles.animation_notfound_container}>
-          <LottieView
-            autoPlay
-            loop={true}
-            source={require('../assets/animations/not-found.json')}
-            style={styles.animation_notfound}
-          />
-          <Text style={styles.notFound}>No Results Found</Text>
-        </View>
-      )}
+      {result && !result.found && <NotFound />}
       {result && result.found && (
         <FlatList
           data={result.res[0].meanings}
@@ -121,23 +118,12 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.primary,
     borderBottomWidth: 2,
   },
-  notFound: {
-    textAlign: 'center',
-    marginTop: moderateScale(20),
-  },
   loadingContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   animation: {
     width: moderateScale(250),
-  },
-  animation_notfound_container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  animation_notfound: {
-    width: moderateScale(150),
   },
   textTitle: {
     fontWeight: '600',

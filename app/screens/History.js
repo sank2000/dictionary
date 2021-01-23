@@ -1,19 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+
+import { Screen, NotFound } from '../components';
 
 export default function History() {
   return (
-    <View style={styles.container}>
-      <Text>History Page</Text>
-    </View>
+    <Screen>
+      <NotFound text="No History" />
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  container: {},
 });

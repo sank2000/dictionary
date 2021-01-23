@@ -10,7 +10,7 @@ import {
 
 import { AntDesign } from '@expo/vector-icons';
 
-import { TextField, Screen, Button, Text } from '../components';
+import { TextField, Screen, Button, Text, NotFound } from '../components';
 import { scale, moderateScale, getData, storeData } from '../functions';
 
 import colors from '../config/colors';
@@ -46,20 +46,24 @@ export default function Notes() {
 
   return (
     <Screen style={styles.container}>
-      <FlatList
-        data={notes}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => {
-          return (
-            <CardNote
-              ind={index}
-              title={item.title}
-              description={item.content}
-              removeItem={removeItem}
-            />
-          );
-        }}
-      />
+      {notes.length === 0 ? (
+        <NotFound text="No Notes are written" />
+      ) : (
+        <FlatList
+          data={notes}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => {
+            return (
+              <CardNote
+                ind={index}
+                title={item.title}
+                description={item.content}
+                removeItem={removeItem}
+              />
+            );
+          }}
+        />
+      )}
 
       <TouchableHighlight
         style={styles.addButton}
@@ -74,32 +78,35 @@ export default function Notes() {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalContainer}>
-          <TextField
-            placeholder="Title"
-            style={styles.textTitle}
-            value={title}
-            onChangeText={(text) => setTitle(text)}
-          />
-          <TextField
-            placeholder="Content"
-            multiline
-            numberOfLines={4}
-            textAlign="left"
-            value={content}
-            onChangeText={(text) => setContent(text)}
-          />
-          <Button
-            title="Add"
-            style={{ width: '80%', marginLeft: '10%' }}
-            onPress={() => handleAdd()}
-          />
-          <Button
-            title="Cancel"
-            color="secondary"
-            style={{ width: '80%', marginLeft: '10%' }}
-            onPress={() => setModalVisible(false)}
-          />
+        <View style={styles.overlay}>
+          <View style={styles.modalContainer}>
+            <TextField
+              placeholder="Title"
+              value={title}
+              onChangeText={(text) => setTitle(text)}
+              style={{ color: colors.primary, fontSize: 20 }}
+            />
+            <TextField
+              placeholder="Content"
+              multiline
+              numberOfLines={4}
+              textAlign="left"
+              value={content}
+              onChangeText={(text) => setContent(text)}
+            />
+            <Button
+              title="Add"
+              style={{ width: '80%', marginLeft: '10%' }}
+              onPress={() => handleAdd()}
+            />
+            <Button
+              title="Cancel"
+              color="secondary"
+              styleText={{ color: colors.black }}
+              style={{ width: '80%', marginLeft: '10%' }}
+              onPress={() => setModalVisible(false)}
+            />
+          </View>
         </View>
       </Modal>
     </Screen>
@@ -123,6 +130,15 @@ const CardNote = ({ ind, title, description, removeItem }) => {
 const styles = StyleSheet.create({
   container: {
     marginTop: 5,
+  },
+  overlay: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    height: '100%',
+    opacity: 0.9,
+    width: '100%',
+    zIndex: 1,
+    flex: 1,
   },
   modalContainer: {
     flex: 1,
