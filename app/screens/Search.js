@@ -7,7 +7,6 @@ import {
   Keyboard,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import LottieView from 'lottie-react-native';
 import { Audio } from 'expo-av';
 
 import {
@@ -16,8 +15,9 @@ import {
   SearchCard,
   AudioCardWithBookmark,
   NotFound,
+  Loader,
 } from '../components';
-import { moderateScale } from '../functions';
+import { updateHistory } from '../functions';
 
 import dictionary from '../api/dictionary';
 
@@ -46,6 +46,7 @@ export default function Search() {
       setLoad(false);
       if (res.ok) {
         setAudioResult(res?.data[0]?.phonetics[0]);
+        updateHistory(searchText, res.data[0]);
       }
       setResult({
         found: res.ok,
@@ -81,16 +82,7 @@ export default function Search() {
           />
         </TouchableOpacity>
       </View>
-      {load && (
-        <View style={styles.loadingContainer}>
-          <LottieView
-            autoPlay
-            loop={true}
-            source={require('../assets/animations/loader.json')}
-            style={styles.animation}
-          />
-        </View>
-      )}
+      {load && <Loader />}
       {audioResult && (
         <AudioCardWithBookmark
           text={audioResult.text}
@@ -117,13 +109,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: colors.primary,
     borderBottomWidth: 2,
-  },
-  loadingContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  animation: {
-    width: moderateScale(250),
   },
   textTitle: {
     fontWeight: '600',

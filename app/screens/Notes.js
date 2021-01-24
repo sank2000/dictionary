@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -10,18 +10,31 @@ import {
 
 import { AntDesign } from '@expo/vector-icons';
 
-import { TextField, Screen, Button, Text, NotFound } from '../components';
+import {
+  TextField,
+  Screen,
+  Button,
+  Text,
+  NotFound,
+  Loader,
+} from '../components';
 import { scale, moderateScale, getData, storeData } from '../functions';
 
 import colors from '../config/colors';
 
+const INITIAL_NOTES = [];
+
 export default function Notes() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState(INITIAL_NOTES);
+  const [load, setLoad] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const initialRef = useRef(true);
+
   const updateList = (val) => {
+    initialRef.current = false;
     setNotes((old) => [...old, val]);
     setModalVisible(false);
   };
@@ -33,6 +46,7 @@ export default function Notes() {
   };
 
   const removeItem = (ind) => {
+    initialRef.current = false;
     setNotes((old) => old.filter((val, index) => ind !== index));
   };
 
@@ -41,12 +55,19 @@ export default function Notes() {
   }, []);
 
   useEffect(() => {
-    storeData(JSON.stringify(notes));
+    if (INITIAL_NOTES !== notes) {
+      setLoad(false);
+    }
+    if (!initialRef.current) {
+      storeData(JSON.stringify(notes));
+    }
   }, [notes]);
 
   return (
     <Screen style={styles.container}>
-      {notes.length === 0 ? (
+      {load ? (
+        <Loader />
+      ) : notes.length === 0 ? (
         <NotFound text="No Notes are written" />
       ) : (
         <FlatList
