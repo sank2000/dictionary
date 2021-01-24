@@ -6,3 +6,4 @@ export { default as SearchCard } from './SearchCard';
 export { default as AudioCardWithBookmark } from './AudioCardWithBookmark';
 export { default as NotFound } from './NotFound';
 export { default as Loader } from './Loader';
+export { default as CommonCard } from './CommonCard';

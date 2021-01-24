@@ -1,12 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { StyleSheet, FlatList } from 'react-native';
 
-import { Screen, NotFound, Loader } from '../components';
-import { getHistory } from '../functions';
+import { Screen, NotFound, Loader, CommonCard } from '../components';
+import { getHistory, updateFullHistory } from '../functions';
+
+import { format } from 'date-fns';
 
 export default function History() {
   const [history, setHistory] = useState([]);
   const [load, setLoad] = useState(true);
+  const initialRef = useRef(true);
+
+  useEffect(() => {
+    if (!initialRef.current) {
+      updateHistoryCache();
+    }
+  }, [history]);
+
+  const updateHistoryCache = async () => {
+    await updateFullHistory(history);
+  };
+
+  const removeItem = (value) => {
+    initialRef.current = false;
+    setHistory((old) => old.filter((val) => val.key !== value));
+  };
 
   const getHistoryFromCache = async () => {
     const data = await getHistory();
@@ -19,16 +37,34 @@ export default function History() {
   }, []);
 
   return (
-    <Screen>
+    <Screen style={styles.container}>
       {load ? (
         <Loader />
+      ) : history.length === 0 ? (
+        <NotFound text="No History" />
       ) : (
-        history.length === 0 && <NotFound text="No History" />
+        <FlatList
+          data={history}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => {
+            return (
+              <CommonCard
+                ind={index}
+                title={item.key}
+                description={format(new Date(item.date), 'd-LLL-y | h : mm a')}
+                descriptionStyle={{ color: 'grey', fontSize: 11 }}
+                onPress={() => removeItem(item.key)}
+              />
+            );
+          }}
+        />
       )}
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    marginTop: 5,
+  },
 });

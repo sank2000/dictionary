@@ -4,7 +4,6 @@ import {
   View,
   Modal,
   TouchableHighlight,
-  TouchableWithoutFeedback,
   FlatList,
 } from 'react-native';
 
@@ -14,9 +13,9 @@ import {
   TextField,
   Screen,
   Button,
-  Text,
   NotFound,
   Loader,
+  CommonCard,
 } from '../components';
 import { scale, moderateScale, getData, storeData } from '../functions';
 
@@ -75,11 +74,11 @@ export default function Notes() {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => {
             return (
-              <CardNote
+              <CommonCard
                 ind={index}
                 title={item.title}
                 description={item.content}
-                removeItem={removeItem}
+                onPress={() => removeItem(index)}
               />
             );
           }}
@@ -134,20 +133,6 @@ export default function Notes() {
   );
 }
 
-const CardNote = ({ ind, title, description, removeItem }) => {
-  return (
-    <View key={ind} style={styles.cardContainer}>
-      <View style={styles.cardTop}>
-        <Text style={styles.textTitle}>{title}</Text>
-        <TouchableWithoutFeedback onPress={() => removeItem(ind)}>
-          <AntDesign name="close" size={15} color="black" />
-        </TouchableWithoutFeedback>
-      </View>
-      <Text>{description}</Text>
-    </View>
-  );
-};
-
 const styles = StyleSheet.create({
   container: {
     marginTop: 5,
@@ -168,24 +153,6 @@ const styles = StyleSheet.create({
     borderTopColor: colors.primary,
     borderTopWidth: 4,
   },
-  cardContainer: {
-    backgroundColor: colors.white,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.5,
-    elevation: 2,
-    padding: moderateScale(20),
-    marginBottom: moderateScale(20),
-    borderWidth: 0.1,
-    borderColor: '#cccccc',
-  },
-  cardTop: {
-    flexDirection: 'row',
-  },
   addButton: {
     backgroundColor: colors.primary,
     justifyContent: 'center',
@@ -197,11 +164,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '85%',
     left: '80%',
-  },
-  textTitle: {
-    color: colors.primary,
-    fontWeight: '600',
-    fontSize: 20,
-    flexGrow: 1,
   },
 });

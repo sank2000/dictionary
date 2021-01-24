@@ -5,31 +5,34 @@ const LENGTH = 50;
 
 const updateHistory = async (key, data) => {
   let cache = await storage.getData(KEY);
+  const dataToStore = {
+    key,
+    data,
+    date: new Date(),
+  };
   if (cache) {
     let flag = 0;
     for (let item of cache) {
-      if (key in item) {
+      if (item.key === key) {
         flag = 1;
-        item[key] = data;
+        item.data = data;
+        item.date = new Date();
       }
     }
     if (!flag) {
-      cache.push({
-        [key]: data,
-      });
+      cache.push(dataToStore);
     }
   } else {
-    cache = [
-      {
-        [key]: data,
-      },
-    ];
+    cache = [dataToStore];
   }
   if (cache.length > LENGTH) {
     cache.shift();
   }
-  console.log(cache.length);
   await storage.storeData(KEY, cache);
+};
+
+const updateFullHistory = async (data) => {
+  await storage.storeData(KEY, data);
 };
 
 const getHistory = async () => {
@@ -41,4 +44,4 @@ const getHistory = async () => {
   }
 };
 
-export { updateHistory, getHistory };
+export { updateHistory, updateFullHistory, getHistory };
