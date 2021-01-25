@@ -87,6 +87,8 @@ export default function Search() {
         <AudioCardWithBookmark
           text={audioResult.text}
           handlePlay={handlePlay}
+          search={result?.res[0].word}
+          data={result?.res[0]}
         />
       )}
       {result && !result.found && <NotFound />}

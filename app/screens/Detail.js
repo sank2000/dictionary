@@ -35,6 +35,8 @@ export default function Detail() {
         <AudioCardWithBookmark
           text={data.data.phonetics[0].text}
           handlePlay={handlePlay}
+          search={data.data.word}
+          data={data.data}
         />
       )}
       <FlatList

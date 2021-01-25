@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, FlatList, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, FlatList } from 'react-native';
 
-import { Screen, NotFound, Loader, CommonCard, Text } from '../components';
+import { Screen, NotFound, Loader, CommonCard } from '../components';
 import { getHistory, updateFullHistory } from '../functions';
 
 import { format } from 'date-fns';
