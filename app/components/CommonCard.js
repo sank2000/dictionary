@@ -1,12 +1,47 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
 import { moderateScale } from '../functions';
 
 import colors from '../config/colors';
 
-function CommonCard({ ind, title, description, onPress, descriptionStyle }) {
+function CommonCard({
+  ind,
+  onTouch,
+  title,
+  description,
+  onPress,
+  descriptionStyle,
+}) {
+  return onTouch ? (
+    <TouchableOpacity onPress={onTouch}>
+      <Card
+        ind={ind}
+        title={title}
+        description={description}
+        onPress={onPress}
+        descriptionStyle={descriptionStyle}
+      />
+    </TouchableOpacity>
+  ) : (
+    <Card
+      ind={ind}
+      title={title}
+      description={description}
+      onPress={onPress}
+      descriptionStyle={descriptionStyle}
+    />
+  );
+}
+
+function Card({ ind, title, description, onPress, descriptionStyle }) {
   return (
     <View key={ind} style={styles.cardContainer}>
       <View style={styles.cardTop}>

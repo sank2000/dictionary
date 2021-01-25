@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { Home, Search, Bookmark, Notes, History } from './app/screens';
+import { Home, Search, Bookmark, Notes, History, Detail } from './app/screens';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +19,7 @@ export default function App() {
         <Stack.Screen name="Bookmark" component={Bookmark} />
         <Stack.Screen name="Notes" component={Notes} />
         <Stack.Screen name="History" component={History} />
+        <Stack.Screen name="Detail" component={Detail} />
       </Stack.Navigator>
     </NavigationContainer>
   );
