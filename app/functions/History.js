@@ -44,4 +44,19 @@ const getHistory = async () => {
   }
 };
 
-export { updateHistory, updateFullHistory, getHistory };
+const getHistoryByKey = async (key) => {
+  const cache = await storage.getData(KEY);
+
+  if (cache) {
+    for (let val of cache) {
+      if (val.key === key) {
+        return val.data;
+      }
+    }
+    return null;
+  } else {
+    return null;
+  }
+};
+
+export { updateHistory, updateFullHistory, getHistory, getHistoryByKey };

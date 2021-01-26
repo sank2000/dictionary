@@ -17,7 +17,7 @@ import {
   NotFound,
   Loader,
 } from '../components';
-import { updateHistory } from '../functions';
+import { getHistoryByKey, updateHistory } from '../functions';
 
 import dictionary from '../api/dictionary';
 
@@ -42,6 +42,17 @@ export default function Search() {
     sound && sound.unloadAsync();
 
     try {
+      const cacheData = await getHistoryByKey(searchText);
+      if (cacheData) {
+        setLoad(false);
+        setAudioResult(cacheData.phonetics[0]);
+        updateHistory(searchText, cacheData);
+        setResult({
+          found: true,
+          res: [cacheData],
+        });
+        return;
+      }
       const res = await dictionary.search(searchText);
       setLoad(false);
       if (res.ok) {
