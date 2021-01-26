@@ -39,6 +39,7 @@ export default function Notes() {
   };
 
   const handleAdd = () => {
+    if (title === '' || content === '') return;
     updateList({ title, content });
     setTitle('');
     setContent('');
