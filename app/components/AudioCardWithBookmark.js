@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import colors from '../config/colors';
 
@@ -8,7 +8,6 @@ import { moderateScale, isBookmarked } from '../functions';
 import { BookmarkContext } from '../context';
 
 import Text from './Text';
-import { useEffect } from 'react/cjs/react.development';
 
 export default function AudioCardWithBookmark({
   text,
