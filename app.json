@@ -3,6 +3,7 @@
     "name": "dictionary",
     "slug": "dictionary",
     "version": "1.0.0",
+    "description": "dictionary app by san",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
     "splash": {
