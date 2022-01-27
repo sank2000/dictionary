@@ -69,7 +69,7 @@ export default function Search() {
   };
 
   const handlePlay = async () => {
-    const { sound } = await Audio.Sound.createAsync({ uri: audioResult.audio });
+    const { sound } = await Audio.Sound.createAsync({ uri: 'https:'+ audioResult.audio });
     setSound(sound);
     await sound.playAsync();
   };
